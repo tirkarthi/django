@@ -4,6 +4,8 @@ from distutils.sysconfig import get_python_lib
 
 from setuptools import find_packages, setup
 
+from pyd.support import setup, Extension
+
 # Warn if we are installing over top of an existing installation. This can
 # cause issues where files that were deleted from a more recent Django are
 # still present in site-packages. See #18115.
@@ -47,7 +49,13 @@ setup(
     entry_points={'console_scripts': [
         'django-admin = django.core.management:execute_from_command_line',
     ]},
-    install_requires=['pytz'],
+    install_requires=['pytz', 'pyd'],
+    ext_modules=[Extension('cookie', ['cookie.d'],
+                          extra_compile_args=['-O'],
+                          build_deimos=True,
+                          d_lump=True,
+                          optimize=True
+    )],
     extras_require={
         "bcrypt": ["bcrypt"],
         "argon2": ["argon2-cffi >= 16.1.0"],
